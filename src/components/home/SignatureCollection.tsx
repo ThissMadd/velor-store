@@ -4,28 +4,21 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useReducedMotion } from "motion/react";
 import { Plus } from "lucide-react";
-import { defaultImages, getProduct, type Product } from "@/data/products";
+import { getProduct, type Product } from "@/data/products";
 import { formatPrice } from "@/lib/format";
 import { useCart } from "@/lib/store";
 import { Reveal } from "@/components/ui/Reveal";
 import { QuickAddDialog } from "./QuickAddDialog";
 
-/** Each rotation film paired with its real catalog product (slug is the source of truth). */
-const SHOWCASE = [
-  { slug: "velor-classic", video: "/videos/watches/classic.mp4" },
-  { slug: "velor-chrono", video: "/videos/watches/chrono.mp4" },
-  { slug: "velor-minimal", video: "/videos/watches/minimal.mp4" },
-  { slug: "velor-royale", video: "/videos/watches/royale.mp4" },
-].flatMap(({ slug, video }) => {
-  const product = getProduct(slug);
-  return product ? [{ product, video }] : [];
+/**
+ * Each rotation film paired with its real catalog product (slug is the source of truth).
+ * Videos are web-optimised copies of /videos/watches/*.mp4 (540×960, no audio, streams immediately);
+ * posters are each film's own first frame, so the poster → video swap is invisible.
+ */
+const SHOWCASE = ["classic", "chrono", "minimal", "royale"].flatMap((name) => {
+  const product = getProduct(`velor-${name}`);
+  return product ? [{ product, video: `/videos/opt/${name}.mp4`, poster: `/images/posters/${name}.jpg` }] : [];
 });
-
-/** Optimised still of the product's default variant, used as the video poster. */
-function posterFor(product: Product) {
-  const src = defaultImages(product)[0];
-  return `/_next/image?url=${encodeURIComponent(encodeURI(src))}&w=640&q=75`;
-}
 
 export function SignatureCollection() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -79,10 +72,11 @@ export function SignatureCollection() {
           </h2>
         </Reveal>
 
-        <ul className="mx-auto mt-12 grid max-w-[1320px] grid-cols-1 gap-x-5 gap-y-12 min-[440px]:grid-cols-2 md:mt-14 lg:grid-cols-4 lg:gap-x-6">
-          {SHOWCASE.map(({ product, video }) => (
+        {/* Two watches side by side on phones and tablets, four in a row on desktop */}
+        <ul className="mx-auto mt-10 grid max-w-[1320px] grid-cols-2 gap-x-3 gap-y-10 sm:gap-x-5 md:mt-14 md:gap-y-12 lg:grid-cols-4 lg:gap-x-6">
+          {SHOWCASE.map(({ product, video, poster }) => (
             <li key={product.slug}>
-              <WatchFilm product={product} video={video} load={load} play={active && !reduce} onAdd={() => addToCart(product)} />
+              <WatchFilm product={product} video={video} poster={poster} load={load} play={active && !reduce} onAdd={() => addToCart(product)} />
             </li>
           ))}
         </ul>
@@ -96,12 +90,14 @@ export function SignatureCollection() {
 function WatchFilm({
   product,
   video,
+  poster,
   load,
   play,
   onAdd,
 }: {
   product: Product;
   video: string;
+  poster: string;
   load: boolean;
   play: boolean;
   onAdd: () => void;
@@ -140,7 +136,7 @@ function WatchFilm({
           <video
             ref={ref}
             src={load ? video : undefined}
-            poster={posterFor(product)}
+            poster={poster}
             className="absolute inset-0 size-full object-contain"
             muted
             loop
@@ -153,7 +149,7 @@ function WatchFilm({
             onLoadedMetadata={() => sync.current()}
           />
         </div>
-        <h3 className="mt-4 font-serif text-lg text-[#F5F2ED] md:text-xl">{product.name}</h3>
+        <h3 className="mt-3 font-serif text-base text-[#F5F2ED] sm:text-lg md:mt-4 md:text-xl">{product.name}</h3>
         <p className="mt-1 text-sm font-medium text-[#C8A46A] tabular-nums">{formatPrice(product.price)}</p>
       </Link>
 
@@ -161,7 +157,7 @@ function WatchFilm({
       <button
         type="button"
         onClick={onAdd}
-        className="mt-4 inline-flex h-11 items-center gap-2 bg-[#C8A46A] px-6 text-[0.72rem] font-medium tracking-[0.2em] text-[#050505] uppercase transition-[opacity,transform,background-color] duration-[250ms] ease-out hover:bg-[#E5C58B] focus-visible:translate-y-0 focus-visible:opacity-100 [@media(hover:hover)]:translate-y-2 [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:translate-y-0 [@media(hover:hover)]:group-hover:opacity-100"
+        className="mt-3 inline-flex h-10 items-center gap-1.5 bg-[#C8A46A] px-3.5 text-[0.62rem] font-medium tracking-[0.14em] whitespace-nowrap sm:mt-4 sm:h-11 sm:gap-2 sm:px-6 sm:text-[0.72rem] sm:tracking-[0.2em] text-[#050505] uppercase transition-[opacity,transform,background-color] duration-[250ms] ease-out hover:bg-[#E5C58B] focus-visible:translate-y-0 focus-visible:opacity-100 [@media(hover:hover)]:translate-y-2 [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:translate-y-0 [@media(hover:hover)]:group-hover:opacity-100"
         aria-label={`Add ${product.name} to cart`}
       >
         <Plus className="size-3.5" aria-hidden /> Add to cart

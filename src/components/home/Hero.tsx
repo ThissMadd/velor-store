@@ -4,11 +4,14 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { ArrowRight } from "lucide-react";
+import { Img } from "@/components/ui/Img";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
-const POSTER = "/images/hero/hero-poster.svg";
-const POSTER_MOBILE = "/images/hero/hero-poster-mobile.svg";
-const VIDEO = "/videos/velor-hero.mp4";
+/** First frame of the film — identical to what the video shows at t=0, so the swap is invisible. */
+const POSTER = "/images/posters/hero.jpg";
+/** Web-optimised copies of /videos/velor-hero.mp4: no audio, index at the start (streams immediately). */
+const VIDEO_DESKTOP = "/videos/opt/hero-1080.mp4";
+const VIDEO_MOBILE = "/videos/opt/hero-720.mp4";
 
 /** Entrance timeline: eyebrow 300ms → heading 500ms → description 800ms → buttons 1000ms. */
 const DELAYS = [0.3, 0.5, 0.8, 1.0];
@@ -27,11 +30,17 @@ export function Hero() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const reduceMotion = useReducedMotion();
   const [visible, setVisible] = useState(false);
+  const [src, setSrc] = useState<string | undefined>(undefined);
+
+  // Pick the lighter 720p file on phones; decided on the client so nothing is fetched twice.
+  useEffect(() => {
+    setSrc(window.matchMedia("(max-width: 767px)").matches ? VIDEO_MOBILE : VIDEO_DESKTOP);
+  }, []);
 
   useEffect(() => {
     const video = videoRef.current;
     const section = sectionRef.current;
-    if (!video || !section) return;
+    if (!video || !section || !src) return;
 
     const conn = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
     const still = Boolean(reduceMotion || conn?.saveData);
@@ -58,31 +67,36 @@ export function Hero() {
     observer.observe(section);
 
     return () => observer.disconnect();
-  }, [reduceMotion]);
+  }, [reduceMotion, src]);
 
   return (
     <section ref={sectionRef} aria-labelledby="hero-title" className="relative isolate h-[100svh] min-h-[600px] overflow-hidden bg-[#050505] text-ivory md:min-h-[680px]">
-      {/* Fallback art shown until the first video frame is decoded */}
-      <picture>
-        <source media="(max-width: 767px)" srcSet={POSTER_MOBILE} />
-        <img src={POSTER} alt="" aria-hidden fetchPriority="high" className="absolute inset-0 -z-30 size-full object-cover object-[70%_center] md:object-center" />
-      </picture>
-
       {/*
         Video layer. Desktop/tablet: full-bleed cover; the watch sits centre-right in the film.
         Mobile: a tall band in the upper part of the screen so the 16:9 frame is only trimmed at the
         sides, softened top and bottom so it melts into the black.
       */}
       <div className="absolute inset-x-0 top-[9%] -z-20 h-[60%] bg-[#050505] md:inset-0 md:h-full">
+        {/* Poster = the film's first frame, framed exactly like the video, painted instantly */}
+        <Img
+          src={POSTER}
+          alt=""
+          aria-hidden
+          fill
+          priority
+          sizes="100vw"
+          quality={80}
+          className="object-cover object-[68%_center] md:object-center"
+        />
         <video
           ref={videoRef}
-          src={VIDEO}
-          className={`size-full object-cover object-[68%_center] transition-opacity duration-[1200ms] ease-(--ease-luxe) md:object-center ${visible ? "opacity-100" : "opacity-0"}`}
+          src={src}
+          className={`relative size-full object-cover object-[68%_center] transition-opacity duration-[1200ms] ease-(--ease-luxe) md:object-center ${visible ? "opacity-100" : "opacity-0"}`}
           autoPlay
           muted
           loop
           playsInline
-          preload="metadata"
+          preload="auto"
           disablePictureInPicture
           disableRemotePlayback
           aria-hidden

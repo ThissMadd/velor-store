@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1000" viewBox="0 0 800 1000" preserveAspectRatio="xMidYMid slice">
+  <defs><radialGradient id="bg" cx=".5" cy=".46" r=".75">
+      <stop offset="0" stop-color="#f7f5f1"/><stop offset=".55" stop-color="#e9e6e0"/>
+      <stop offset="1" stop-color="#d4d0c8"/></radialGradient>
+      <linearGradient id="beam" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fff" stop-opacity="0.5"/>
+      <stop offset=".6" stop-color="#fff" stop-opacity="0"/></linearGradient>
+  <linearGradient id="strap" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#f3dfc4"/><stop offset=".28" stop-color="#cfa77b"/>
+    <stop offset=".52" stop-color="#8e6642"/><stop offset=".74" stop-color="#e9c7a0"/>
+    <stop offset="1" stop-color="#ab8058"/>
+  </linearGradient>
+  <linearGradient id="strap-r" x1="1" y1="1" x2="0" y2="0">
+    <stop offset="0" stop-color="#f3dfc4"/><stop offset=".3" stop-color="#cfa77b"/>
+    <stop offset=".55" stop-color="#8e6642"/><stop offset=".8" stop-color="#e9c7a0"/>
+    <stop offset="1" stop-color="#ab8058"/>
+  </linearGradient>
+  <linearGradient id="strap-c" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#cfa77b"/><stop offset=".5" stop-color="#f3dfc4"/><stop offset="1" stop-color="#e9c7a0"/>
+  </linearGradient>
+  <linearGradient id="strap-h" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#8e6642"/><stop offset=".22" stop-color="#cfa77b"/>
+    <stop offset=".5" stop-color="#f3dfc4"/><stop offset=".78" stop-color="#cfa77b"/>
+    <stop offset="1" stop-color="#8e6642"/>
+  </linearGradient>
+    <linearGradient id="leather" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#060505"/><stop offset=".25" stop-color="#141210"/>
+      <stop offset=".5" stop-color="#2c2926"/><stop offset=".75" stop-color="#141210"/>
+      <stop offset="1" stop-color="#060505"/></linearGradient>
+    <pattern id="mesh" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <rect width="6" height="6" fill="none"/><line x1="0" y1="0" x2="0" y2="6" stroke="#000" stroke-opacity=".22" stroke-width="1.6"/>
+      <line x1="3" y1="0" x2="3" y2="6" stroke="#fff" stroke-opacity=".18" stroke-width="1"/></pattern>
+    <pattern id="grain" width="9" height="9" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="3" r=".9" fill="#000" fill-opacity=".5"/><circle cx="6.5" cy="7" r=".7" fill="#fff" fill-opacity=".12"/></pattern>
+  <linearGradient id="metal" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#f3dfc4"/><stop offset=".28" stop-color="#cfa77b"/>
+    <stop offset=".52" stop-color="#8e6642"/><stop offset=".74" stop-color="#e9c7a0"/>
+    <stop offset="1" stop-color="#ab8058"/>
+  </linearGradient>
+  <linearGradient id="metal-r" x1="1" y1="1" x2="0" y2="0">
+    <stop offset="0" stop-color="#f3dfc4"/><stop offset=".3" stop-color="#cfa77b"/>
+    <stop offset=".55" stop-color="#8e6642"/><stop offset=".8" stop-color="#e9c7a0"/>
+    <stop offset="1" stop-color="#ab8058"/>
+  </linearGradient>
+  <linearGradient id="metal-c" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#cfa77b"/><stop offset=".5" stop-color="#f3dfc4"/><stop offset="1" stop-color="#e9c7a0"/>
+  </linearGradient>
+  <linearGradient id="metal-h" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#8e6642"/><stop offset=".22" stop-color="#cfa77b"/>
+    <stop offset=".5" stop-color="#f3dfc4"/><stop offset=".78" stop-color="#cfa77b"/>
+    <stop offset="1" stop-color="#8e6642"/>
+  </linearGradient>
+    <radialGradient id="dial" cx=".42" cy=".38" r=".75">
+      <stop offset="0" stop-color="#fdfcf8"/><stop offset=".6" stop-color="#f1ede5"/>
+      <stop offset="1" stop-color="#ddd7cc"/></radialGradient>
+    <radialGradient id="sunray" cx=".5" cy=".5" r=".5">
+      <stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".85" stop-color="#fff" stop-opacity=".04"/>
+      <stop offset="1" stop-color="#000" stop-opacity=".35"/></radialGradient>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff" stop-opacity=".22"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+    <clipPath id="dialclip"><circle cx="400" cy="500" r="192"/></clipPath>
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="26" stdDeviation="26" flood-color="#000" flood-opacity="0.26"/></filter>
+  </defs>
+  <rect x="-3000" y="-3000" width="7000" height="7000" fill="url(#bg)"/>
+      <rect x="-3000" y="-3000" width="7000" height="7000" fill="url(#beam)"/>
+  <g transform="translate(0 0) translate(400 500) rotate(0) scale(1.056) translate(-400 -500)" filter="url(#shadow)">
+    <rect x="284" y="-200" width="232" height="520" fill="url(#strap-h)"/>
+<rect x="284" y="-200" width="232" height="520" fill="url(#mesh)"/>
+<rect x="284" y="-200" width="4" height="520" fill="#000" opacity=".25"/>
+<rect x="512" y="-200" width="4" height="520" fill="#000" opacity=".25"/>
+<rect x="284" y="680" width="232" height="520" fill="url(#strap-h)"/>
+<rect x="284" y="680" width="232" height="520" fill="url(#mesh)"/>
+<rect x="284" y="680" width="4" height="520" fill="#000" opacity=".25"/>
+<rect x="512" y="680" width="4" height="520" fill="#000" opacity=".25"/>
+    <rect x="278" y="270" width="28" height="58" rx="10" fill="url(#metal)"/>
+<rect x="278" y="672" width="28" height="58" rx="10" fill="url(#metal)"/>
+<rect x="494" y="270" width="28" height="58" rx="10" fill="url(#metal)"/>
+<rect x="494" y="672" width="28" height="58" rx="10" fill="url(#metal)"/>
+<rect x="606" y="474" width="20" height="52" rx="5" fill="url(#metal-r)"/>
+<rect x="620" y="468" width="30" height="64" rx="7" fill="url(#metal-h)"/>
+<rect x="621" y="474" width="28" height="1.6" fill="#000" opacity=".28"/>
+<rect x="621" y="480" width="28" height="1.6" fill="#000" opacity=".28"/>
+<rect x="621" y="486" width="28" height="1.6" fill="#000" opacity=".28"/>
+<rect x="621" y="492" width="28" height="1.6" fill="#000" opacity=".28"/>
+<rect x="621" y="498" width="28" height="1.6" fill="#000" opacity=".28"/>
+<rect x="621" y="504" width="28" height="1.6" fill="#000" opacity=".28"/>
+<rect x="621" y="510" width="28" height="1.6" fill="#000" opacity=".28"/>
+<rect x="621" y="516" width="28" height="1.6" fill="#000" opacity=".28"/>
+<rect x="621" y="522" width="28" height="1.6" fill="#000" opacity=".28"/>
+<circle cx="400" cy="500" r="222" fill="url(#metal)"/>
+<circle cx="400" cy="500" r="222" fill="none" stroke="#000" stroke-opacity=".35" stroke-width="2"/>
+<circle cx="400" cy="500" r="206" fill="url(#metal-r)"/>
+<circle cx="400" cy="500" r="196" fill="#000" opacity=".55"/>
+<circle cx="400" cy="500" r="192" fill="url(#dial)"/>
+<circle cx="400" cy="500" r="192" fill="url(#sunray)" opacity="0.35"/>
+<rect x="-1.7" y="-180" width="3.4" height="26" rx="1.5" fill="url(#metal)" transform="translate(400 500) rotate(0)"/>
+<circle cx="400" cy="332" r="2.6" fill="url(#metal)" transform="rotate(30 400 500)"/>
+<circle cx="400" cy="332" r="2.6" fill="url(#metal)" transform="rotate(60 400 500)"/>
+<rect x="-1.7" y="-180" width="3.4" height="26" rx="1.5" fill="url(#metal)" transform="translate(400 500) rotate(90)"/>
+<circle cx="400" cy="332" r="2.6" fill="url(#metal)" transform="rotate(120 400 500)"/>
+<circle cx="400" cy="332" r="2.6" fill="url(#metal)" transform="rotate(150 400 500)"/>
+<rect x="-1.7" y="-180" width="3.4" height="26" rx="1.5" fill="url(#metal)" transform="translate(400 500) rotate(180)"/>
+<circle cx="400" cy="332" r="2.6" fill="url(#metal)" transform="rotate(210 400 500)"/>
+<circle cx="400" cy="332" r="2.6" fill="url(#metal)" transform="rotate(240 400 500)"/>
+<rect x="-1.7" y="-180" width="3.4" height="26" rx="1.5" fill="url(#metal)" transform="translate(400 500) rotate(270)"/>
+<circle cx="400" cy="332" r="2.6" fill="url(#metal)" transform="rotate(300 400 500)"/>
+<circle cx="400" cy="332" r="2.6" fill="url(#metal)" transform="rotate(330 400 500)"/>
+<text x="400" y="420" text-anchor="middle" font-family="Didot, 'Bodoni 72', 'Playfair Display', Georgia, serif" font-size="24" letter-spacing="5" fill="#1d1b19">VÉLOR</text>
+<g transform="translate(400 500) rotate(305)">
+    <polygon points="0,-112 -9,0 0,18" fill="#c79c6f"/>
+    <polygon points="0,-112 9,0 0,18" fill="#8e6642"/></g>
+<g transform="translate(400 500) rotate(60)">
+    <polygon points="0,-164 -7.5,0 0,20" fill="#c79c6f"/>
+    <polygon points="0,-164 7.5,0 0,20" fill="#8e6642"/></g>
+<circle cx="400" cy="500" r="9" fill="url(#metal)"/><circle cx="400" cy="500" r="3" fill="#111"/>
+<g clip-path="url(#dialclip)"><ellipse cx="300" cy="380" rx="260" ry="120" transform="rotate(-38 300 380)" fill="url(#glass)"/></g>
+<circle cx="400" cy="500" r="192" fill="none" stroke="#fff" stroke-opacity=".08" stroke-width="2"/>
+  </g>
+</svg>

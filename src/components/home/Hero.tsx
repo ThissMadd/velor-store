@@ -25,9 +25,14 @@ const item = {
  * It pauses whenever the hero is off-screen and resumes when it returns; reduced-motion and
  * Save-Data visitors get the film's first frame as a still instead of playback.
  */
+/** Length of the dissolve between the end of the film and its beginning. */
+const CROSSFADE_S = 1.2;
+
 export function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
+  // Two copies of the same film: while one finishes, the other starts from frame 0 and dissolves in.
+  const videoA = useRef<HTMLVideoElement>(null);
+  const videoB = useRef<HTMLVideoElement>(null);
   const reduceMotion = useReducedMotion();
   const [visible, setVisible] = useState(false);
   const [src, setSrc] = useState<string | undefined>(undefined);
@@ -38,36 +43,83 @@ export function Hero() {
   }, []);
 
   useEffect(() => {
-    const video = videoRef.current;
+    const a = videoA.current;
+    const b = videoB.current;
     const section = sectionRef.current;
-    if (!video || !section || !src) return;
+    if (!a || !b || !section || !src) return;
 
     const conn = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
-    const still = Boolean(reduceMotion || conn?.saveData);
-
-    if (still) {
-      video.pause();
-      video.currentTime = 0;
+    if (reduceMotion || conn?.saveData) {
+      a.pause();
+      b.pause();
+      a.currentTime = 0;
       return;
     }
 
-    const tryPlay = () => {
-      video.play().catch(() => {
-        /* autoplay blocked — the first frame / poster stays visible */
-      });
+    let active = a;
+    let standby = b;
+    let fading = false;
+    let onScreen = false;
+    let raf = 0;
+    let swapTimer = 0;
+
+    const show = (v: HTMLVideoElement, on: boolean) => {
+      v.style.opacity = on ? "1" : "0";
+    };
+    show(a, true);
+    show(b, false);
+
+    const play = (v: HTMLVideoElement) => v.play().catch(() => {});
+
+    // Watch the active film; just before it ends, start the standby copy from the beginning
+    // and dissolve it in, then swap roles. Nothing ever pauses or jumps back visibly.
+    const tick = () => {
+      raf = requestAnimationFrame(tick);
+      if (fading || !onScreen) return;
+      const d = active.duration;
+      if (!Number.isFinite(d) || d <= CROSSFADE_S * 2) return;
+      if (active.currentTime >= d - CROSSFADE_S) {
+        fading = true;
+        standby.currentTime = 0;
+        play(standby);
+        show(standby, true);
+        show(active, false);
+        const finished = active;
+        swapTimer = window.setTimeout(() => {
+          finished.pause();
+          finished.currentTime = 0;
+          active = standby;
+          standby = finished;
+          fading = false;
+        }, CROSSFADE_S * 1000);
+      }
     };
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) tryPlay();
-        else video.pause();
+        onScreen = entry.isIntersecting;
+        if (onScreen) {
+          play(active);
+          if (fading) play(standby);
+        } else {
+          a.pause();
+          b.pause();
+        }
       },
       { threshold: 0.15 },
     );
     observer.observe(section);
+    raf = requestAnimationFrame(tick);
 
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      cancelAnimationFrame(raf);
+      window.clearTimeout(swapTimer);
+    };
   }, [reduceMotion, src]);
+
+  const videoClass =
+    "absolute inset-0 size-full object-cover object-[68%_center] opacity-0 transition-opacity ease-in-out md:object-center";
 
   return (
     <section ref={sectionRef} aria-labelledby="hero-title" className="relative isolate h-[100svh] min-h-[600px] overflow-hidden bg-[#050505] text-ivory md:min-h-[680px]">
@@ -88,21 +140,27 @@ export function Hero() {
           quality={80}
           className="object-cover object-[68%_center] md:object-center"
         />
-        <video
-          ref={videoRef}
-          src={src}
-          className={`relative size-full object-cover object-[68%_center] transition-opacity duration-[1200ms] ease-(--ease-luxe) md:object-center ${visible ? "opacity-100" : "opacity-0"}`}
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="auto"
-          disablePictureInPicture
-          disableRemotePlayback
-          aria-hidden
-          tabIndex={-1}
-          onLoadedData={() => setVisible(true)}
-        />
+        {/* Wrapper fades the whole film layer in once the first frame is decoded */}
+        <div className={`absolute inset-0 transition-opacity duration-[1200ms] ease-(--ease-luxe) ${visible ? "opacity-100" : "opacity-0"}`}>
+          {[videoA, videoB].map((ref, i) => (
+            <video
+              key={i}
+              ref={ref}
+              src={src}
+              className={videoClass}
+              style={{ transitionDuration: `${CROSSFADE_S * 1000}ms` }}
+              autoPlay={i === 0}
+              muted
+              playsInline
+              preload="auto"
+              disablePictureInPicture
+              disableRemotePlayback
+              aria-hidden
+              tabIndex={-1}
+              onLoadedData={i === 0 ? () => setVisible(true) : undefined}
+            />
+          ))}
+        </div>
         <div aria-hidden className="absolute inset-x-0 top-0 h-1/4 bg-gradient-to-b from-[#050505] to-transparent md:hidden" />
         <div aria-hidden className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[#050505] to-transparent md:hidden" />
       </div>
